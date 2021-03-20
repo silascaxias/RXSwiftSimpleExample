@@ -1,0 +1,6 @@
+
+Pods/
+
+*.xcworkspacedata
+
+RXSwiftExample.xcworkspace/xcshareddata/
