@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import RxSwift
 
 class MasterViewController: UIViewController {
     
     @IBOutlet weak var characterLabel: UILabel!
+    
+    let disposedBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,14 +21,10 @@ class MasterViewController: UIViewController {
     @IBAction func selectCharacter(_ sender: UIButton) {
         guard let detailViewController = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return }
         
-        detailViewController.delegate = self
+        detailViewController.selectedCharacter.subscribe (onNext: { [weak self] characterName in
+            self?.characterLabel.text = "Hello \(characterName)"
+        }).disposed(by: disposedBag)
         
         navigationController?.pushViewController(detailViewController, animated: true)
-    }
-}
-
-extension MasterViewController: CharacterDelegate {
-    func didSelectCharacter(_ name: String) {
-        characterLabel.text = "Hello \(name)"
     }
 }

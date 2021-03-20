@@ -6,23 +6,23 @@
 //
 
 import UIKit
-
-protocol CharacterDelegate {
-    func didSelectCharacter(_ name:String)
-}
+import RxSwift
 
 class DetailViewController: UIViewController {
     
-    var delegate: CharacterDelegate?
+    private let selectedCharacterVariable = BehaviorSubject(value: "User")
+    
+    var selectedCharacter:Observable<String> {
+        return selectedCharacterVariable.asObservable()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     @IBAction func didSelectedCharacter(_ sender: UIButton) {
-        guard let selectedCharater = sender.titleLabel?.text,
-              let delegate = self.delegate  else { return }
+        guard let characterName = sender.titleLabel?.text else { return }
         
-        delegate.didSelectCharacter(selectedCharater)
+        selectedCharacterVariable.on(.next(characterName))
     }
 }
